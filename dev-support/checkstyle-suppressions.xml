@@ -1,0 +1,25 @@
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD Suppressions 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+  <!-- Suppress the JavadocPackage check for missing package-info.java -->
+  <suppress checks="JavadocPackage"
+            files=".*"
+            message="Missing package-info.java file." />
+
+  <!-- Suppress the JavadocType check for missing Javadoc comments on classes -->
+  <suppress checks="MissingJavadocMethod"
+            files=".*"
+            message="Missing a Javadoc comment." />
+
+  <!-- Suppress the HideUtilityClassConstructor check for utility classes -->
+  <suppress checks="HideUtilityClassConstructor"
+            files=".*"
+            message="Utility classes should not have a public or default constructor." />
+
+  <!-- Suppress the FinalParameters check for final method parameters -->
+  <suppress checks="FinalParameters"
+            files=".*"
+            message="Parameter args should be final." />
+</suppressions>
