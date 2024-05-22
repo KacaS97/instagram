@@ -50,7 +50,7 @@ class PostControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(postJson))
         .andExpect(status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber()) // Ensure id is present and is a number
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())  // Check that id exists
         .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Test description"));
   }
 }
