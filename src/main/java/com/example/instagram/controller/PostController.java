@@ -1,12 +1,11 @@
 package com.example.instagram.controller;
 
+import com.example.instagram.dto.PostDto;
 import com.example.instagram.entity.Post;
 import com.example.instagram.exception.NotFoundException;
 import com.example.instagram.mapper.PostMapper;
-import com.example.instagram.dto.PostDto;
 import com.example.instagram.service.PostService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,11 +28,12 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
+  @ResponseStatus(HttpStatus.CREATED)
+  public PostDto createPost(@RequestBody PostDto postDto) {
     Post post = postMapper.toEntity(postDto);
-    Post createdPost = postService.createdPost(post);
+    Post createdPost = postService.createPost(post);
     PostDto createdPostDto = postMapper.toDto(post);
-    return new ResponseEntity<>(createdPostDto, HttpStatus.CREATED);
+    return createdPostDto;
   }
 
 }

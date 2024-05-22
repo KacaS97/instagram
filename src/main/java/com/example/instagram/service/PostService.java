@@ -19,7 +19,7 @@ public class PostService {
     return postRepository.findById(id);
   }
 
-  public Post createdPost(Post post){
+  public Post createPost(Post post){
     return postRepository.save(post);
   }
 
