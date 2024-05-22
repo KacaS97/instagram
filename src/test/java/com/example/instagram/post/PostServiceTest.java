@@ -1,5 +1,8 @@
 package com.example.instagram.post;
 
+import com.example.instagram.entity.Post;
+import com.example.instagram.repository.PostRepository;
+import com.example.instagram.service.PostService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
