@@ -1,4 +1,4 @@
-package com.example.instagram.postDto;
+package com.example.instagram.dto;
 
 public class PostDto {
 

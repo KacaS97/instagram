@@ -2,7 +2,7 @@ package com.example.instagram.controller;
 
 import com.example.instagram.exception.NotFoundException;
 import com.example.instagram.mapper.PostMapper;
-import com.example.instagram.postDto.PostDto;
+import com.example.instagram.dto.PostDto;
 import com.example.instagram.service.PostService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
