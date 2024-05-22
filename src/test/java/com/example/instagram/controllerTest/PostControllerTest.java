@@ -1,4 +1,4 @@
-package com.example.instagram.post;
+package com.example.instagram.controllerTest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,11 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,16 +34,22 @@ class PostControllerTest {
 
   @Test
   void whenPostDoesNotExist_thenReturnsNotFound() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders.get("/posts/1"))
+    mockMvc.perform(get("/posts/1"))
         .andExpect(status().isNotFound());
   }
 
-
   @Test
   public void testCreatePost() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+    String postJson = """
+       {
+        "id": 1,
+        "description": "Test description"
+       }
+       """;
+
+    mockMvc.perform(post("/posts")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("{\"id\": 1, \"description\": \"Test description\"}"))
+            .content(postJson))
         .andExpect(status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Test description"));

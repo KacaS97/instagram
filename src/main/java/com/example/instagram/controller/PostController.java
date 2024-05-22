@@ -38,8 +38,7 @@ public class PostController {
   public PostDto createPost(@RequestBody PostDto postDto) {
     Post post = postMapper.toEntity(postDto);
     Post createdPost = postService.createPost(post);
-    PostDto createdPostDto = postMapper.toDto(post);
-    return createdPostDto;
+    return postMapper.toDto(createdPost);
   }
 
 }

@@ -1,4 +1,4 @@
-package com.example.instagram.post;
+package com.example.instagram.serviceTest;
 
 import com.example.instagram.entity.Post;
 import com.example.instagram.repository.PostRepository;
