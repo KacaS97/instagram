@@ -41,17 +41,16 @@ class PostControllerTest {
   @Test
   public void testCreatePost() throws Exception {
     String postJson = """
-       {
-        "id": 1,
-        "description": "Test description"
-       }
-       """;
+            {
+                "description": "Test description"
+            }
+            """;
 
     mockMvc.perform(post("/posts")
             .contentType(MediaType.APPLICATION_JSON)
             .content(postJson))
         .andExpect(status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber()) // Ensure id is present and is a number
         .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Test description"));
   }
 }
