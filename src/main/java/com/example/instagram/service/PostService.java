@@ -19,4 +19,8 @@ public class PostService {
     return postRepository.findById(id);
   }
 
+  public Post createdPost(Post post){
+    return postRepository.save(post);
+  }
+
 }
