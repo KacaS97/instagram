@@ -1,5 +1,8 @@
 package com.example.instagram.post;
 
+import com.example.instagram.entity.Post;
+import com.example.instagram.mapper.PostMapper;
+import com.example.instagram.postDto.PostDto;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 

@@ -1,7 +1,14 @@
-package com.example.instagram.post;
+package com.example.instagram.entity;
 
-public class PostDto {
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "posts")
+public class Post {
+
+  @Id
   private long id;
   private String description;
 

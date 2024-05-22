@@ -1,5 +1,7 @@
-package com.example.instagram.post;
+package com.example.instagram.service;
 
+import com.example.instagram.entity.Post;
+import com.example.instagram.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
