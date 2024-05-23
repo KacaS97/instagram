@@ -1,6 +1,7 @@
 package com.example.instagram.service;
 
 import com.example.instagram.entity.Post;
+import com.example.instagram.exception.NotFoundException;
 import com.example.instagram.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,4 +20,8 @@ public class PostService {
     return postRepository.findById(id);
   }
 
+  public Post updatePost(Post post) {
+    getById(post.getId()).orElseThrow(NotFoundException::new);
+    return postRepository.save(post);
+  }
 }
