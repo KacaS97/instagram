@@ -1,14 +1,16 @@
-package com.example.instagram.post;
+package com.example.instagram.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,5 +34,23 @@ class PostControllerTest {
   @Test
   void whenPostDoesNotExist_thenReturnsNotFound() throws Exception {
     mockMvc.perform(get("/posts/999")).andExpect(status().isNotFound());
+  }
+
+  @Test
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "insert into posts(id, description) values(1, 'old description')")
+  void whenUpdatePost_thenUpdateAndReturnDto() throws Exception {
+    String postDto = """
+        {
+          "id": 1,
+          "description": "new description"
+        }
+        """;
+
+    mockMvc.perform(put("/posts/1")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(postDto))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value("1"))
+        .andExpect(jsonPath("$.description").value("new description"));
   }
 }
