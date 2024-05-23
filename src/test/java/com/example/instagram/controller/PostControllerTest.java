@@ -1,4 +1,4 @@
-package com.example.instagram.controllerTest;
+package com.example.instagram.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
