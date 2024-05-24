@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
 class PostControllerTest {
 
   @Autowired
@@ -25,6 +24,7 @@ class PostControllerTest {
 
   @Test
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "INSERT INTO posts (id, description) VALUES (1, 'My first post')")
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
   void whenPostExists_thenReturnsPost() throws Exception {
     mockMvc.perform(get("/posts/1"))
         .andExpect(status().isOk())
@@ -39,6 +39,8 @@ class PostControllerTest {
   }
 
   @Test
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
+
   public void testCreatePost() throws Exception {
     String postJson = """
             {
@@ -56,6 +58,7 @@ class PostControllerTest {
 
   @Test
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "insert into posts(id, description) values(1, 'old description')")
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
   void whenUpdatePost_thenUpdateAndReturnDto() throws Exception {
     String postDto = """
         {
