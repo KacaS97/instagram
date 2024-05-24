@@ -1,12 +1,11 @@
 package com.example.instagram.mapper;
 
-import com.example.instagram.entity.Post;
 import com.example.instagram.dto.PostDto;
-import org.junit.jupiter.api.Assertions;
+import com.example.instagram.entity.Post;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PostMapperTest {
 

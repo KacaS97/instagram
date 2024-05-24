@@ -12,8 +12,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
@@ -61,14 +61,14 @@ class PostServiceTest {
     // given
     Post post = new Post();
     post.setDescription("Test Description");
-    when(postRepository.save(any(Post.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    when(postRepository.save(post)).thenReturn(post);
 
     // when
     Post createdPost = postService.createPost(post);
 
     // then
     assertEquals(post.getDescription(), createdPost.getDescription());
-    verify(postRepository, times(1)).save(post);
+    verify(postRepository).save(post);
   }
 
 }

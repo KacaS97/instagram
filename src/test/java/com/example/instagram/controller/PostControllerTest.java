@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -50,7 +49,7 @@ class PostControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(postJson))
         .andExpect(status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())  // Check that id exists
-        .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Test description"));
+        .andExpect(jsonPath("$.id").exists())  // Check that id exists
+        .andExpect(jsonPath("$.description").value("Test description"));
   }
 }
