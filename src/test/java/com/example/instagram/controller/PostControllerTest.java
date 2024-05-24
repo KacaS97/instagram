@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,5 +52,23 @@ class PostControllerTest {
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").exists())  // Check that id exists
         .andExpect(jsonPath("$.description").value("Test description"));
+  }
+
+  @Test
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "insert into posts(id, description) values(1, 'old description')")
+  void whenUpdatePost_thenUpdateAndReturnDto() throws Exception {
+    String postDto = """
+        {
+          "id": 1,
+          "description": "new description"
+        }
+        """;
+
+    mockMvc.perform(put("/posts/1")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(postDto))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value("1"))
+        .andExpect(jsonPath("$.description").value("new description"));
   }
 }
