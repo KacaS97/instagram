@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,11 +34,31 @@ class PostControllerTest {
 
   @Test
   void whenPostDoesNotExist_thenReturnsNotFound() throws Exception {
-    mockMvc.perform(get("/posts/999")).andExpect(status().isNotFound());
+    mockMvc.perform(get("/posts/1"))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
+
+  public void testCreatePost() throws Exception {
+    String postJson = """
+            {
+                "description": "Test description"
+            }
+            """;
+
+    mockMvc.perform(post("/posts")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(postJson))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id").exists())  // Check that id exists
+        .andExpect(jsonPath("$.description").value("Test description"));
   }
 
   @Test
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "insert into posts(id, description) values(1, 'old description')")
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
   void whenUpdatePost_thenUpdateAndReturnDto() throws Exception {
     String postDto = """
         {

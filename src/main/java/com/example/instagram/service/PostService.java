@@ -24,4 +24,9 @@ public class PostService {
     getById(post.getId()).orElseThrow(NotFoundException::new);
     return postRepository.save(post);
   }
+
+  public Post createPost(Post post) {
+    return postRepository.save(post);
+  }
+
 }
