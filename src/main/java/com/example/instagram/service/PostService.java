@@ -29,4 +29,11 @@ public class PostService {
     return postRepository.save(post);
   }
 
+  public void deletePost(long id) {
+    if (!postRepository.existsById(id)) {
+      throw new NotFoundException();
+    }
+    postRepository.deleteById(id);
+  }
+
 }
