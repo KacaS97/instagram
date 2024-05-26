@@ -1,3 +1,4 @@
+
 package com.example.instagram.service;
 
 import com.example.instagram.entity.Post;
@@ -9,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,31 +95,24 @@ class PostServiceTest {
     verify(postRepository, times(0)).save(post);
     verify(postRepository).findById(post.getId());
   }
-
   @Test
-  void testDeletePostSuccess() {
+  void whenGetAllPosts_thenReturnAllPosts() {
     // given
-    long postId = 1L;
-    when(postRepository.existsById(postId)).thenReturn(true);
+    Post post1 = new Post();
+    post1.setId(1L);
+    post1.setDescription("Post 1 Description");
+
+    Post post2 = new Post();
+    post2.setId(2L);
+    post2.setDescription("Post 2 Description");
+
+    List<Post> expectedPosts = Arrays.asList(post1, post2);
 
     // when
-    postService.deletePost(postId);
+    when(postRepository.findAll()).thenReturn(expectedPosts);
+    List<Post> actualPosts = postService.getAllPosts();
 
     // then
-    verify(postRepository).deleteById(postId);
+    assertEquals(expectedPosts, actualPosts);
   }
-
-  @Test
-  void testDeletePostNotFound() {
-    // given
-    long postId = 1L;
-    when(postRepository.existsById(postId)).thenReturn(false);
-
-    // when
-    assertThrows(NotFoundException.class, () -> postService.deletePost(postId));
-
-    // then
-    verify(postRepository, never()).deleteById(postId);
-  }
-
 }

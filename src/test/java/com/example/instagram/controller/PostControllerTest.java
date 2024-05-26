@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -91,5 +92,19 @@ class PostControllerTest {
     mockMvc.perform(delete("/posts/{id}", nonExistentPostId)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound());
+  }
+
+
+  @Test
+  @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "INSERT INTO posts (id, description) VALUES (1, 'My first post'), (2, 'My second post')")
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
+  void whenGetAllPosts_thenReturnsAllPosts() throws Exception {
+    mockMvc.perform(get("/posts"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(2)))
+        .andExpect(jsonPath("$[0].id", is(1)))
+        .andExpect(jsonPath("$[0].description", is("My first post")))
+        .andExpect(jsonPath("$[1].id", is(2)))
+        .andExpect(jsonPath("$[1].description", is("My second post")));
   }
 }

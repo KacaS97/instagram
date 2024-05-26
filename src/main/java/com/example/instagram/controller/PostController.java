@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/posts")
 public class PostController {
@@ -52,10 +55,16 @@ public class PostController {
     return postMapper.toDto(createdPost);
   }
 
-
   @DeleteMapping(value = "/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deletePost(@PathVariable long id) {
     postService.deletePost(id);
+  }
+
+  @GetMapping
+  public List<PostDto> getAllPosts() {
+    return postService.getAllPosts().stream()
+        .map(postMapper::toDto)
+        .collect(Collectors.toList());
   }
 }
