@@ -95,6 +95,22 @@ class PostServiceTest {
     verify(postRepository, times(0)).save(post);
     verify(postRepository).findById(post.getId());
   }
+
+  @Test
+  void testDeletePostSuccess() {
+    long postId = 1L;
+    when(postRepository.existsById(postId)).thenReturn(true);
+    postService.deletePost(postId);
+    verify(postRepository).deleteById(postId);
+  }
+
+  @Test
+  void testDeletePostNotFound() {    long postId = 1L;
+    when(postRepository.existsById(postId)).thenReturn(false);
+    assertThrows(NotFoundException.class, () -> postService.deletePost(postId));
+    verify(postRepository, never()).deleteById(postId);
+  }
+
   @Test
   void whenGetAllPosts_thenReturnAllPosts() {
     // given
