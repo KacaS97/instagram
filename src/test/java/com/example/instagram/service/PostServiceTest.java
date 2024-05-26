@@ -105,7 +105,8 @@ class PostServiceTest {
   }
 
   @Test
-  void testDeletePostNotFound() {    long postId = 1L;
+  void testDeletePostNotFound() {
+    long postId = 1L;
     when(postRepository.existsById(postId)).thenReturn(false);
     assertThrows(NotFoundException.class, () -> postService.deletePost(postId));
     verify(postRepository, never()).deleteById(postId);
