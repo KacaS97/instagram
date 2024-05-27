@@ -1,4 +1,3 @@
-
 package com.example.instagram.service;
 
 import com.example.instagram.entity.Post;
@@ -9,13 +8,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
@@ -123,7 +131,7 @@ class PostServiceTest {
     post2.setId(2L);
     post2.setDescription("Post 2 Description");
 
-    List<Post> expectedPosts = Arrays.asList(post1, post2);
+    List<Post> expectedPosts = asList(post1, post2);
 
     // when
     when(postRepository.findAll()).thenReturn(expectedPosts);
@@ -131,5 +139,30 @@ class PostServiceTest {
 
     // then
     assertEquals(expectedPosts, actualPosts);
+  }
+
+  @Test
+  void whenGetAllPosts_thenReturnPagedPosts() {
+    // given
+    Post post1 = new Post();
+    post1.setId(1L);
+    post1.setDescription("Post 1 Description");
+
+    Post post2 = new Post();
+    post2.setId(2L);
+    post2.setDescription("Post 2 Description");
+
+    List<Post> expectedPosts = asList(post1, post2);
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Post> expectedPage = new PageImpl<>(expectedPosts, pageable, expectedPosts.size());
+
+    // when
+    when(postRepository.findAll(pageable)).thenReturn(expectedPage);
+    Page<Post> actualPage = postService.getAllPosts(pageable);
+
+    // then
+    assertEquals(expectedPage.getContent(), actualPage.getContent());
+    assertEquals(expectedPage.getTotalElements(), actualPage.getTotalElements());
+    assertEquals(expectedPage.getNumber(), actualPage.getNumber());
   }
 }
