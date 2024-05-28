@@ -1,13 +1,5 @@
 package com.example.instagram.controller;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.servlet.MockMvc;
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -16,6 +8,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -45,10 +45,10 @@ class PostControllerTest {
 
   public void testCreatePost() throws Exception {
     String postJson = """
-            {
-                "description": "Test description"
-            }
-            """;
+        {
+            "description": "Test description"
+        }
+        """;
 
     mockMvc.perform(post("/posts")
             .contentType(MediaType.APPLICATION_JSON)
@@ -70,8 +70,8 @@ class PostControllerTest {
         """;
 
     mockMvc.perform(put("/posts/1")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(postDto))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(postDto))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value("1"))
         .andExpect(jsonPath("$.description").value("new description"));
@@ -101,10 +101,10 @@ class PostControllerTest {
   void whenGetAllPosts_thenReturnsAllPosts() throws Exception {
     mockMvc.perform(get("/posts"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(2)))
-        .andExpect(jsonPath("$[0].id", is(1)))
-        .andExpect(jsonPath("$[0].description", is("My first post")))
-        .andExpect(jsonPath("$[1].id", is(2)))
-        .andExpect(jsonPath("$[1].description", is("My second post")));
+        .andExpect(jsonPath("$.content", hasSize(2)))
+        .andExpect(jsonPath("$.content.[0].id", is(1)))
+        .andExpect(jsonPath("$.content.[0].description", is("My first post")))
+        .andExpect(jsonPath("$.content.[1].id", is(2)))
+        .andExpect(jsonPath("$.content.[1].description", is("My second post")));
   }
 }

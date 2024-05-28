@@ -5,6 +5,9 @@ import com.example.instagram.entity.Post;
 import com.example.instagram.exception.NotFoundException;
 import com.example.instagram.mapper.PostMapper;
 import com.example.instagram.service.PostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/posts")
@@ -34,13 +34,13 @@ public class PostController {
   @GetMapping(value = "/{id}")
   public PostDto getById(@PathVariable long id) {
     return postService.getById(id)
-      .map(postMapper::toDto)
-      .orElseThrow(NotFoundException::new);
+        .map(postMapper::toDto)
+        .orElseThrow(NotFoundException::new);
   }
 
   @PutMapping(value = "/{id}")
   public PostDto updatePost(@PathVariable long id,
-                            @RequestBody PostDto postDto) {
+      @RequestBody PostDto postDto) {
     Post post = postMapper.toEntity(postDto);
     post.setId(id);
     Post updatedPost = postService.updatePost(post);
@@ -62,9 +62,7 @@ public class PostController {
   }
 
   @GetMapping
-  public List<PostDto> getAllPosts() {
-    return postService.getAllPosts().stream()
-        .map(postMapper::toDto)
-        .collect(Collectors.toList());
+  public Page<PostDto> getAllPosts(@PageableDefault Pageable pageable) {
+    return postService.getAllPosts(pageable).map(postMapper::toDto);
   }
 }

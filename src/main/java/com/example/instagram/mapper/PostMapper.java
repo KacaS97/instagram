@@ -1,7 +1,7 @@
 package com.example.instagram.mapper;
 
-import com.example.instagram.entity.Post;
 import com.example.instagram.dto.PostDto;
+import com.example.instagram.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

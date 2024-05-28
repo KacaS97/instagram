@@ -3,10 +3,10 @@ package com.example.instagram.service;
 import com.example.instagram.entity.Post;
 import com.example.instagram.exception.NotFoundException;
 import com.example.instagram.repository.PostRepository;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PostService {
@@ -37,7 +37,7 @@ public class PostService {
     postRepository.deleteById(id);
   }
 
-  public List<Post> getAllPosts() {
-    return postRepository.findAll();
+  public Page<Post> getAllPosts(Pageable pageable) {
+    return postRepository.findAll(pageable);
   }
 }
