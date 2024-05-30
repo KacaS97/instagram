@@ -6,11 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import com.example.instagram.dto.PostDto;
 import com.example.instagram.entity.Post;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = {PostMapperImpl.class, ImageMapperImpl.class})
 class PostMapperTest {
 
-  private final PostMapper postMapper = Mappers.getMapper(PostMapper.class);
+  @Autowired
+  private PostMapper postMapper;
 
   @Test
   void toDto() {
