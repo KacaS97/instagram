@@ -39,12 +39,11 @@ public class PostController {
   }
 
   @PutMapping(value = "/{id}")
-  public PostDto updatePost(@PathVariable long id,
-      @RequestBody PostDto postDto) {
-    Post post = postMapper.toEntity(postDto);
-    post.setId(id);
-    Post updatedPost = postService.updatePost(post);
-    return postMapper.toDto(updatedPost);
+  public PostDto updatePost(@PathVariable long id, @RequestBody PostDto postDto) {
+    Post post = postService.getById(id).orElseThrow(NotFoundException::new);
+    postMapper.updateEntityFromDto(postDto, post);
+    postService.updatePost(post);
+    return postMapper.toDto(post);
   }
 
   @PostMapping

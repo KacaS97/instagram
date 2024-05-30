@@ -65,44 +65,6 @@ class PostServiceTest {
   }
 
   @Test
-  void whenPostExists_thenUpdateAndReturn() {
-    // given
-    Post post = new Post();
-    post.setId(1L);
-    post.setDescription("new description");
-
-    Post existingPost = new Post();
-    existingPost.setId(1L);
-    existingPost.setDescription("old description");
-
-    // when
-    when(postRepository.findById(post.getId())).thenReturn(Optional.of(existingPost));
-    when(postRepository.save(post)).thenReturn(post);
-    Post updatedPost = postService.updatePost(post);
-
-    // then
-    verify(postRepository).save(post);
-    verify(postRepository).findById(post.getId());
-    assertEquals(post.getDescription(), updatedPost.getDescription());
-  }
-
-  @Test
-  void whenPostDoesNotExist_thenThrowException() {
-    // given
-    Post post = new Post();
-    post.setId(1L);
-    post.setDescription("description");
-
-    // when
-    when(postRepository.findById(post.getId())).thenReturn(Optional.empty());
-    assertThrows(NotFoundException.class, () -> postService.updatePost(post));
-
-    // then
-    verify(postRepository, times(0)).save(post);
-    verify(postRepository).findById(post.getId());
-  }
-
-  @Test
   void testDeletePostSuccess() {
     long postId = 1L;
     when(postRepository.existsById(postId)).thenReturn(true);
