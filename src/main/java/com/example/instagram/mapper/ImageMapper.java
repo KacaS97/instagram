@@ -13,6 +13,6 @@ public interface ImageMapper {
 
   // TODO add test
   @Mapping(target = "id", ignore = true)
-  Image toEntity(Image image);
+  Image toEntity(ImageDto imageDto);
 
 }
