@@ -8,10 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ImageMapper {
 
-  // TODO add test
   ImageDto toDto(Image image);
 
-  // TODO add test
   @Mapping(target = "id", ignore = true)
   Image toEntity(ImageDto imageDto);
 

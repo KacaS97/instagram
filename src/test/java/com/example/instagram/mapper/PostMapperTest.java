@@ -1,10 +1,14 @@
 package com.example.instagram.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import com.example.instagram.dto.PostBuildDto;
 import com.example.instagram.dto.PostDto;
+import com.example.instagram.entity.Image;
 import com.example.instagram.entity.Post;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +24,13 @@ class PostMapperTest {
     // given
     Post post = new Post();
     post.setId(1L);
-    String description = "description";
-    post.setDescription(description);
+    post.setDescription("description");
+
+    Image image = new Image();
+    image.setName("image");
+    image.setId(2L);
+    image.setContent("content".getBytes(StandardCharsets.UTF_8));
+    post.setImage(image);
 
     // when
     PostDto postDto = postMapper.toDto(post);
@@ -29,21 +38,39 @@ class PostMapperTest {
     // then
     assertEquals(postDto.getId(), post.getId());
     assertEquals(postDto.getDescription(), post.getDescription());
+    assertEquals(postDto.getImageDto().id(), image.getId());
+    assertEquals(postDto.getImageDto().name(), image.getName());
+    assertArrayEquals(postDto.getImageDto().content(), image.getContent());
   }
 
   @Test
   void toEntity() {
     // given
-    PostDto postDto = new PostDto();
-    postDto.setId(1);
-    postDto.setDescription("description");
+    PostBuildDto dto = new PostBuildDto("description");
 
     // when
-    Post entity = postMapper.toEntity(postDto);
+    Post entity = postMapper.toEntity(dto);
 
     //then
     assertNull(entity.getId());
-    assertEquals(postDto.getDescription(), entity.getDescription());
+    assertEquals(dto.description(), entity.getDescription());
+  }
+
+
+  @Test
+  public void testUpdateEntityFromPutDto() {
+    // given
+    Post post = new Post();
+    post.setId(1L);
+    post.setDescription("old desc");
+
+    PostBuildDto postBuildDto = new PostBuildDto("new desc");
+
+    /// when
+    postMapper.updateEntityFromBuildDto(postBuildDto, post);
+
+    // then
+    assertEquals(postBuildDto.description(), post.getDescription());
   }
 
 }

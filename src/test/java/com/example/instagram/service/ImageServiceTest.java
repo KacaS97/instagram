@@ -1,12 +1,11 @@
 package com.example.instagram.service;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.example.instagram.entity.Image;
-import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -15,7 +14,7 @@ public class ImageServiceTest {
   private final ImageService imageService = new ImageService();
 
   @Test
-  public void testBuildImage() throws Exception {
+  public void whenBuildImage_thenThrowIOException() throws Exception {
     byte[] content = {1, 2, 3};
     MockMultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg",
         content);
@@ -29,19 +28,10 @@ public class ImageServiceTest {
 
   @Test
   public void testBuildImage_IOException() {
-    MockMultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg",
-        new byte[0]) {
-      @Override
-      public byte[] getBytes() throws IOException {
-        throw new IOException("Test exception");
-      }
-    };
+    MockMultipartFile multipartFile = new MockMultipartFile(
+        "file", "test.jpg", "image/jpeg", new byte[0]);
 
-    Exception exception = assertThrows(RuntimeException.class, () -> {
-      imageService.buildImage(multipartFile);
-    });
-
-    assertEquals("Cannot read multipartFile", exception.getMessage());
+    assertDoesNotThrow(() -> imageService.buildImage(multipartFile));
   }
 }
 

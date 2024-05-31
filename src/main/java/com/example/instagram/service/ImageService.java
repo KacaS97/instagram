@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ImageService {
 
-  // TODO add test
   public Image buildImage(MultipartFile multipartFile) {
     Image image = new Image();
     try {

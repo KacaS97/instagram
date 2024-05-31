@@ -1,5 +1,6 @@
 package com.example.instagram.controller;
 
+import com.example.instagram.dto.PostBuildDto;
 import com.example.instagram.dto.PostDto;
 import com.example.instagram.entity.Post;
 import com.example.instagram.exception.NotFoundException;
@@ -39,16 +40,16 @@ public class PostController {
   }
 
   @PutMapping(value = "/{id}")
-  public PostDto updatePost(@PathVariable long id, @RequestBody PostDto postDto) {
+  public PostDto updatePost(@PathVariable long id, @RequestBody PostBuildDto postBuildDto) {
     Post post = postService.getById(id).orElseThrow(NotFoundException::new);
-    postMapper.updateEntityFromDto(postDto, post);
+    postMapper.updateEntityFromBuildDto(postBuildDto, post);
     postService.updatePost(post);
     return postMapper.toDto(post);
   }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public PostDto createPost(@RequestBody PostDto postDto) {
+  public PostDto createPost(@RequestBody PostBuildDto postDto) {
     Post post = postMapper.toEntity(postDto);
     Post createdPost = postService.createPost(post);
     return postMapper.toDto(createdPost);

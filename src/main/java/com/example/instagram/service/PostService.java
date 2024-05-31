@@ -39,4 +39,5 @@ public class PostService {
   public Page<Post> getAllPosts(Pageable pageable) {
     return postRepository.findAll(pageable);
   }
+
 }

@@ -25,7 +25,6 @@ public class ImageController {
     this.postService = postService;
   }
 
-  // TODO add integration test
   // curl -X POST http://localhost:8080/posts/1/images -F "multipartFile=@image.png"
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
