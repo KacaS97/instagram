@@ -27,32 +27,38 @@ class PostControllerTest {
   @Test
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "INSERT INTO posts (id, description) VALUES (1, 'My first post')")
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
-  void whenPostExists_thenReturnsPost() throws Exception {
+  void givenPostRetrieval_whenPostExists_thenPostIsReturned() throws Exception {
+    // when
     mockMvc.perform(get("/posts/1"))
+        // then
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(1)))
         .andExpect(jsonPath("$.description", is("My first post")));
   }
 
   @Test
-  void whenPostDoesNotExist_thenReturnsNotFound() throws Exception {
+  void givenPostRetrieval_whenPostDoesNotExist_thenNotFoundIsReturned() throws Exception {
+    // when
     mockMvc.perform(get("/posts/1"))
+        // then
         .andExpect(status().isNotFound());
   }
 
   @Test
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
-
-  public void testCreatePost() throws Exception {
+  void whenCreatePost_thenPostIsCreated() throws Exception {
+    // given
     String postJson = """
         {
             "description": "Test description"
         }
         """;
 
+    // when
     mockMvc.perform(post("/posts")
             .contentType(MediaType.APPLICATION_JSON)
             .content(postJson))
+        // then
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").exists())  // Check that id exists
         .andExpect(jsonPath("$.description").value("Test description"));
@@ -61,7 +67,8 @@ class PostControllerTest {
   @Test
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "insert into posts(id, description) values(1, 'old description')")
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
-  void whenUpdatePost_thenUpdateAndReturnDto() throws Exception {
+  void givenPostUpdate_whenPostExists_thenPostIsUpdatedAndReturned() throws Exception {
+    // given
     String postDto = """
         {
           "id": 1,
@@ -69,9 +76,11 @@ class PostControllerTest {
         }
         """;
 
+    // when
     mockMvc.perform(put("/posts/1")
             .contentType(MediaType.APPLICATION_JSON)
             .content(postDto))
+        // then
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value("1"))
         .andExpect(jsonPath("$.description").value("new description"));
@@ -80,17 +89,23 @@ class PostControllerTest {
   @Test
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "INSERT INTO posts (id, description) VALUES (1, 'Test post')")
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
-  void whenDeletePostExists_thenReturnsNoContent() throws Exception {
+  void givenPostDeletion_whenPostExists_thenPostIsDeleted() throws Exception {
+    // when
     mockMvc.perform(delete("/posts/1")
             .contentType(MediaType.APPLICATION_JSON))
+        // then
         .andExpect(status().isNoContent());
   }
 
   @Test
-  void whenDeletePostDoesNotExist_thenReturnsNotFound() throws Exception {
+  void givenDeletion_whenPostDoesNotExist_thenNotFoundIsReturned() throws Exception {
+    // given
     long nonExistentPostId = 1L;
+
+    // when
     mockMvc.perform(delete("/posts/{id}", nonExistentPostId)
             .contentType(MediaType.APPLICATION_JSON))
+        // then
         .andExpect(status().isNotFound());
   }
 
@@ -98,8 +113,10 @@ class PostControllerTest {
   @Test
   @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, statements = "INSERT INTO posts (id, description) VALUES (1, 'My first post'), (2, 'My second post')")
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
-  void whenGetAllPosts_thenReturnsAllPosts() throws Exception {
+  void whenGetAllPosts_thenAllPostsAreReturned() throws Exception {
+    // when
     mockMvc.perform(get("/posts"))
+        // then
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.content", hasSize(2)))
         .andExpect(jsonPath("$.content.[0].id", is(1)))

@@ -20,7 +20,7 @@ class PostMapperTest {
   private PostMapper postMapper;
 
   @Test
-  void toDto() {
+  void testToDto() {
     // given
     Post post = new Post();
     post.setId(1L);
@@ -44,7 +44,7 @@ class PostMapperTest {
   }
 
   @Test
-  void toEntity() {
+  void testToEntity() {
     // given
     PostBuildDto dto = new PostBuildDto("description");
 
@@ -58,7 +58,7 @@ class PostMapperTest {
 
 
   @Test
-  public void testUpdateEntityFromPutDto() {
+  public void testUpdateEntityFromBuildDto() {
     // given
     Post post = new Post();
     post.setId(1L);

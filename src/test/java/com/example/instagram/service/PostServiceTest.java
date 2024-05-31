@@ -32,7 +32,7 @@ class PostServiceTest {
   private PostRepository postRepository;
 
   @Test
-  void whenGetById_thenReturnPost() {
+  void givenPostRetrieval_whenPostExists_thenPostOptionalIsReturned() {
     // given
     long id = 1L;
     Post post = new Post();
@@ -51,7 +51,7 @@ class PostServiceTest {
   }
 
   @Test
-  void whenGetById_thenReturnEmpty() {
+  void givenPostRetrieval_whenPostDoesNotExist_thenEmptyOptionalIsReturned() {
     // given
     long id = 1L;
 
@@ -64,23 +64,33 @@ class PostServiceTest {
   }
 
   @Test
-  void testDeletePostSuccess() {
+  void givenPostDeletion_whenPostExists_thenDeletePost() {
+    // given
     long postId = 1L;
+
+    // when
     when(postRepository.existsById(postId)).thenReturn(true);
     postService.deletePost(postId);
+
+    // then
     verify(postRepository).deleteById(postId);
   }
 
   @Test
-  void testDeletePostNotFound() {
+  void givenPostDeletion_whenPostDoesNotExist_thenDoNothing() {
+    // given
     long postId = 1L;
+
+    // when
     when(postRepository.existsById(postId)).thenReturn(false);
+
+    // then
     assertThrows(NotFoundException.class, () -> postService.deletePost(postId));
     verify(postRepository, never()).deleteById(postId);
   }
 
   @Test
-  void whenGetAllPosts_thenReturnAllPosts() {
+  void whenGetAllPosts_thenAllPostsAreReturned() {
     // given
     Post post1 = new Post();
     post1.setId(1L);

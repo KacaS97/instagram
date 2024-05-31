@@ -34,7 +34,7 @@ class ImageControllerTest {
   @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, statements = "insert into posts(id, description, image_id) values (1, 'desc', 1);")
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = {"delete from posts",
       "delete from images"})
-  void whenPostExists_thenCreateImage() throws Exception {
+  void givenImageCreation_whenPostExists_thenUpdatePostAndCreateImage() throws Exception {
     // given
     MockMultipartFile multipartFile = new MockMultipartFile("multipartFile", "image.jpg",
         MediaType.IMAGE_JPEG_VALUE, "content".getBytes());
