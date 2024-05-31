@@ -21,9 +21,8 @@ public class PostService {
     return postRepository.findById(id);
   }
 
-  public Post updatePost(Post post) {
-    getById(post.getId()).orElseThrow(NotFoundException::new);
-    return postRepository.save(post);
+  public void updatePost(Post post) {
+    postRepository.save(post);
   }
 
   public Post createPost(Post post) {
@@ -40,4 +39,5 @@ public class PostService {
   public Page<Post> getAllPosts(Pageable pageable) {
     return postRepository.findAll(pageable);
   }
+
 }

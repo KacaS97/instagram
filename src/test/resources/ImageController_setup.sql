@@ -1,0 +1,1 @@
+insert into posts(id, description, image_id) values (1, 'desc', 1);

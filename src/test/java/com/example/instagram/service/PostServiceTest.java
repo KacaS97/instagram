@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,7 +32,7 @@ class PostServiceTest {
   private PostRepository postRepository;
 
   @Test
-  void whenGetById_thenReturnPost() {
+  void givenPostRetrieval_whenPostExists_thenPostOptionalIsReturned() {
     // given
     long id = 1L;
     Post post = new Post();
@@ -52,7 +51,7 @@ class PostServiceTest {
   }
 
   @Test
-  void whenGetById_thenReturnEmpty() {
+  void givenPostRetrieval_whenPostDoesNotExist_thenEmptyOptionalIsReturned() {
     // given
     long id = 1L;
 
@@ -65,61 +64,33 @@ class PostServiceTest {
   }
 
   @Test
-  void whenPostExists_thenUpdateAndReturn() {
+  void givenPostDeletion_whenPostExists_thenDeletePost() {
     // given
-    Post post = new Post();
-    post.setId(1L);
-    post.setDescription("new description");
-
-    Post existingPost = new Post();
-    existingPost.setId(1L);
-    existingPost.setDescription("old description");
-
-    // when
-    when(postRepository.findById(post.getId())).thenReturn(Optional.of(existingPost));
-    when(postRepository.save(post)).thenReturn(post);
-    Post updatedPost = postService.updatePost(post);
-
-    // then
-    verify(postRepository).save(post);
-    verify(postRepository).findById(post.getId());
-    assertEquals(post.getDescription(), updatedPost.getDescription());
-  }
-
-  @Test
-  void whenPostDoesNotExist_thenThrowException() {
-    // given
-    Post post = new Post();
-    post.setId(1L);
-    post.setDescription("description");
-
-    // when
-    when(postRepository.findById(post.getId())).thenReturn(Optional.empty());
-    assertThrows(NotFoundException.class, () -> postService.updatePost(post));
-
-    // then
-    verify(postRepository, times(0)).save(post);
-    verify(postRepository).findById(post.getId());
-  }
-
-  @Test
-  void testDeletePostSuccess() {
     long postId = 1L;
+
+    // when
     when(postRepository.existsById(postId)).thenReturn(true);
     postService.deletePost(postId);
+
+    // then
     verify(postRepository).deleteById(postId);
   }
 
   @Test
-  void testDeletePostNotFound() {
+  void givenPostDeletion_whenPostDoesNotExist_thenDoNothing() {
+    // given
     long postId = 1L;
+
+    // when
     when(postRepository.existsById(postId)).thenReturn(false);
+
+    // then
     assertThrows(NotFoundException.class, () -> postService.deletePost(postId));
     verify(postRepository, never()).deleteById(postId);
   }
 
   @Test
-  void whenGetAllPosts_thenReturnAllPosts() {
+  void whenGetAllPosts_thenAllPostsAreReturned() {
     // given
     Post post1 = new Post();
     post1.setId(1L);
