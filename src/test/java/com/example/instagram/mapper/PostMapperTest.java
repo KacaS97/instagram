@@ -36,11 +36,11 @@ class PostMapperTest {
     PostDto postDto = postMapper.toDto(post);
 
     // then
-    assertEquals(postDto.getId(), post.getId());
-    assertEquals(postDto.getDescription(), post.getDescription());
-    assertEquals(postDto.getImageDto().id(), image.getId());
-    assertEquals(postDto.getImageDto().name(), image.getName());
-    assertArrayEquals(postDto.getImageDto().content(), image.getContent());
+    assertEquals(postDto.id(), post.getId());
+    assertEquals(postDto.description(), post.getDescription());
+    assertEquals(postDto.imageDto().id(), image.getId());
+    assertEquals(postDto.imageDto().name(), image.getName());
+    assertArrayEquals(postDto.imageDto().content(), image.getContent());
   }
 
   @Test
