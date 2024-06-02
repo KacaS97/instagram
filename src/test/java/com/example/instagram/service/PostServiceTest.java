@@ -1,6 +1,7 @@
 package com.example.instagram.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -8,6 +9,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.instagram.entity.Image;
 import com.example.instagram.entity.Post;
 import com.example.instagram.exception.NotFoundException;
 import com.example.instagram.repository.PostRepository;
@@ -30,6 +32,9 @@ class PostServiceTest {
 
   @Mock
   private PostRepository postRepository;
+
+  @Mock
+  private ImageService imageService;
 
   @Test
   void givenPostRetrieval_whenPostExists_thenPostOptionalIsReturned() {
@@ -109,5 +114,21 @@ class PostServiceTest {
 
     // then
     assertEquals(expectedPostsPage, actualPosts);
+  }
+
+  @Test
+  void whenDeletingImage_thenDeleteImageAndUpdatePost() {
+    //given
+    Post post = new Post();
+    Image image = new Image();
+    post.setImage(image);
+
+    //when
+    postService.deleteImage(post);
+
+    //then
+    assertNull(post.getImage());
+    verify(imageService).deleteImage(image);
+    verify(postRepository).save(post);
   }
 }

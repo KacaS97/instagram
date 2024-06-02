@@ -6,6 +6,7 @@ import com.example.instagram.entity.Post;
 import com.example.instagram.exception.NotFoundException;
 import com.example.instagram.mapper.PostMapper;
 import com.example.instagram.service.PostService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -22,15 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/posts")
+@RequiredArgsConstructor
 public class PostController {
 
   private final PostService postService;
   private final PostMapper postMapper;
-
-  public PostController(PostService postService, PostMapper postMapper) {
-    this.postService = postService;
-    this.postMapper = postMapper;
-  }
 
   @GetMapping(value = "/{id}")
   public PostDto getById(@PathVariable long id) {
