@@ -2,6 +2,9 @@ package com.example.instagram.controller;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,6 +33,7 @@ class ImageControllerTest {
   @Autowired
   private ImageRepository imageRepository;
 
+
   @Test
   @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, statements = "insert into posts(id, description, image_id) values (1, 'desc', 1);")
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = {"delete from posts",
@@ -53,4 +57,42 @@ class ImageControllerTest {
     assertEquals(1, imageRepository.findAll().size());
   }
 
+  @Test
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, statements = {
+      "insert into images(id, name, content) values (1, 'image.jpg', 'content');",
+      "insert into posts(id, description, image_id) values (1, 'desc', 1);"
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = {
+      "delete from posts",
+      "delete from images"
+  })
+  void givenImageDeletion_whenPostNotExists_thenReturnNotFound() throws Exception {
+    // when & then
+    mockMvc.perform(delete("/posts/999/images")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, statements = {
+      "insert into images(id, name, content) values (1, 'image.jpg', 'content');",
+      "insert into posts(id, description, image_id) values (1, 'desc', 1);"
+  })
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = {
+      "delete from posts",
+      "delete from images"
+  })
+  void givenImageDeletion_whenPostExists_thenDeleteImage() throws Exception {
+    // Given
+    long postId = 1L;
+
+    // When
+    mockMvc.perform(delete("/posts/1/images", postId)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNoContent());
+
+    // Then
+    assertTrue(imageRepository.existsById(1L));
+    assertNull(postRepository.findById(postId).orElseThrow().getImage());
+  }
 }

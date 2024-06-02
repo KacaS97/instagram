@@ -5,6 +5,7 @@ import com.example.instagram.exception.NotFoundException;
 import com.example.instagram.service.ImageService;
 import com.example.instagram.service.PostService;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,19 @@ public class ImageController {
         .ifPresentOrElse(post -> {
               Image image = imageService.buildImage(multipartFile);
               post.setImage(image);
+              postService.updatePost(post);
+            },
+            () -> {
+              throw new NotFoundException();
+            });
+  }
+
+  @DeleteMapping
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteImage(@PathVariable long postId) {
+    postService.getById(postId)
+        .ifPresentOrElse(post -> {
+              post.setImage(null);
               postService.updatePost(post);
             },
             () -> {
