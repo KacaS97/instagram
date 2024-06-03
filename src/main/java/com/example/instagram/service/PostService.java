@@ -1,5 +1,6 @@
 package com.example.instagram.service;
 
+import com.example.instagram.entity.Image;
 import com.example.instagram.entity.Post;
 import com.example.instagram.exception.NotFoundException;
 import com.example.instagram.repository.PostRepository;
@@ -45,6 +46,17 @@ public class PostService {
     imageService.deleteImage(post.getImage());
     post.setImage(null);
     updatePost(post);
+  }
+
+  @Transactional
+  public void updateImage(Post post, Image image) {
+    Image oldImage = post.getImage();
+    post.setImage(image);
+    updatePost(post);
+    if (oldImage != null) {
+      imageService.deleteImage(oldImage);
+    }
+
   }
 
 }
