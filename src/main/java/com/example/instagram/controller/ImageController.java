@@ -28,7 +28,6 @@ public class ImageController {
   private final ImageService imageService;
   private final PostService postService;
 
-  @Autowired
   private ImageRepository imageRepository;
   @Autowired
   private PostRepository postRepository;

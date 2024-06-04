@@ -122,4 +122,5 @@ class ImageControllerTest {
             .contentType(MediaType.MULTIPART_FORM_DATA))
         .andExpect(status().isNotFound());
   }
+
 }
