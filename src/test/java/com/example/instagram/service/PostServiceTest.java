@@ -131,4 +131,37 @@ class PostServiceTest {
     verify(imageService).deleteImage(image);
     verify(postRepository).save(post);
   }
+
+  @Test
+  void givenImageUpdate_whenImageDoesNotExist_thenPostIsUpdated() {
+    // given
+    Post post = new Post();
+    Image newImage = new Image();
+
+    // when
+    postService.updateImage(post, newImage);
+
+    // then
+    assertEquals(newImage, post.getImage());
+    verify(postRepository).save(post);
+  }
+
+  @Test
+  void givenImageUpdate_whenImageExists_thenPostIsUpdated() {
+    // given
+    Post post = new Post();
+    Image oldImage = new Image();
+    post.setImage(oldImage);
+    Image newImage = new Image();
+
+    // when
+    postService.updateImage(post, newImage);
+
+    // then
+    assertEquals(newImage, post.getImage());
+    verify(postRepository).save(post);
+    verify(imageService).deleteImage(oldImage);
+  }
+
 }
+
