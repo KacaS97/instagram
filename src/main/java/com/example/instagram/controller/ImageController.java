@@ -8,7 +8,6 @@ import com.example.instagram.repository.PostRepository;
 import com.example.instagram.service.ImageService;
 import com.example.instagram.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +28,6 @@ public class ImageController {
   private final PostService postService;
 
   private ImageRepository imageRepository;
-  @Autowired
   private PostRepository postRepository;
 
   // curl -X POST http://localhost:8080/posts/1/images -F "multipartFile=@image.png"
