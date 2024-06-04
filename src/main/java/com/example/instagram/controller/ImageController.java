@@ -3,8 +3,6 @@ package com.example.instagram.controller;
 import com.example.instagram.entity.Image;
 import com.example.instagram.entity.Post;
 import com.example.instagram.exception.NotFoundException;
-import com.example.instagram.repository.ImageRepository;
-import com.example.instagram.repository.PostRepository;
 import com.example.instagram.service.ImageService;
 import com.example.instagram.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +24,6 @@ public class ImageController {
 
   private final ImageService imageService;
   private final PostService postService;
-
-  private ImageRepository imageRepository;
-  private PostRepository postRepository;
 
   // curl -X POST http://localhost:8080/posts/1/images -F "multipartFile=@image.png"
   @PostMapping
