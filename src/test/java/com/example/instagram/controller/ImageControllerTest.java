@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.instagram.config.TestSecurityConfig;
 import com.example.instagram.entity.Image;
 import com.example.instagram.entity.Post;
 import com.example.instagram.repository.ImageRepository;
@@ -20,16 +19,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
-@ContextConfiguration(classes = {TestSecurityConfig.class})
 class ImageControllerTest {
 
   @Autowired
@@ -40,6 +36,7 @@ class ImageControllerTest {
   private ImageRepository imageRepository;
 
   @Test
+  @WithMockUser
   @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, statements = "insert into posts(id, description) values (10, 'desc')")
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = {"delete from posts",
       "delete from images"})
@@ -62,6 +59,7 @@ class ImageControllerTest {
   }
 
   @Test
+  @WithMockUser
   void givenImageDeletion_whenPostDoesNotExist_thenReturnNotFound() throws Exception {
     // when & then
     mockMvc.perform(delete("/posts/999/images")
@@ -70,6 +68,7 @@ class ImageControllerTest {
   }
 
   @Test
+  @WithMockUser
   @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, statements = {
       "insert into images(id, name, content) values (10, 'image.jpg', 'content')",
       "insert into posts(id, description, image_id) values (10, 'desc', 10)"
@@ -90,6 +89,7 @@ class ImageControllerTest {
   }
 
   @Test
+  @WithMockUser
   @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, statements = {
       "insert into images(id, name, content) values (10, 'old_image.jpg', 'old_content')",
       "insert into posts(id, description, image_id) values (10, 'desc', 10)"
@@ -117,6 +117,7 @@ class ImageControllerTest {
   }
 
   @Test
+  @WithMockUser
   void givenImageUpdate_whenPostDoesNotExist_thenReturnNotFound() throws Exception {
     // given
     MockMultipartFile multipartFile = new MockMultipartFile("multipartFile", "new_image.jpg",
