@@ -5,12 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import com.example.instagram.config.TestSecurityConfig;
 import com.example.instagram.dto.ImageDto;
 import com.example.instagram.entity.Image;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
-
+@ActiveProfiles("test")
+@ContextConfiguration(classes = {TestSecurityConfig.class})
 public class ImageMapperTest {
 
   private ImageMapper imageMapper = Mappers.getMapper(ImageMapper.class);
