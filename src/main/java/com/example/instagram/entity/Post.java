@@ -18,6 +18,7 @@ public class Post {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String description;
+  private String userName;
   @OneToOne(cascade = CascadeType.ALL)
   private Image image;
 
