@@ -78,17 +78,4 @@ class PostMapperTest {
     assertEquals("old username", post.getUserName());
   }
 
-  @Test
-  void swapWithArithmetic() {
-    int a = 5;
-    int b = 7;
-
-    a = a + b; // a now becomes 12
-    b = a - b; // b now becomes 5 (12 - 7)
-    a = a - b; // a now becomes 7 (12 - 5)
-
-    System.out.println("a = " + a); // Should print: a = 7
-    System.out.println("b = " + b); // Should print: b = 5
-  }
-
 }
