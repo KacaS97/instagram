@@ -25,6 +25,7 @@ class PostMapperTest {
     Post post = new Post();
     post.setId(1L);
     post.setDescription("description");
+    post.setUserName("username");
 
     Image image = new Image();
     image.setName("image");
@@ -41,6 +42,7 @@ class PostMapperTest {
     assertEquals(postDto.imageDto().id(), image.getId());
     assertEquals(postDto.imageDto().name(), image.getName());
     assertArrayEquals(postDto.imageDto().content(), image.getContent());
+    assertEquals(postDto.userName(), post.getUserName());
   }
 
   @Test
@@ -54,6 +56,7 @@ class PostMapperTest {
     //then
     assertNull(entity.getId());
     assertEquals(dto.description(), entity.getDescription());
+    assertNull(entity.getUserName());
   }
 
 
@@ -63,6 +66,7 @@ class PostMapperTest {
     Post post = new Post();
     post.setId(1L);
     post.setDescription("old desc");
+    post.setUserName("old username");
 
     PostBuildDto postBuildDto = new PostBuildDto("new desc");
 
@@ -71,6 +75,7 @@ class PostMapperTest {
 
     // then
     assertEquals(postBuildDto.description(), post.getDescription());
+    assertEquals("old username", post.getUserName());
   }
 
 }

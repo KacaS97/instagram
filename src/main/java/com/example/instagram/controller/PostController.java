@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,8 +48,12 @@ public class PostController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public PostDto createPost(@RequestBody PostBuildDto postDto) {
-    Post post = postMapper.toEntity(postDto);
+  public PostDto createPost(@RequestBody PostBuildDto postBuildDto) {
+    Post post = postMapper.toEntity(postBuildDto);
+    OAuth2User oauth2User = (OAuth2User) SecurityContextHolder.getContext().getAuthentication()
+        .getPrincipal();
+    String userName = oauth2User.getAttribute("login");
+    post.setUserName(userName);
     Post createdPost = postService.createPost(post);
     return postMapper.toDto(createdPost);
   }

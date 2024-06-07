@@ -2,6 +2,8 @@ package com.example.instagram.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -9,11 +11,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -48,7 +54,6 @@ class PostControllerTest {
   }
 
   @Test
-  @WithMockUser
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM posts")
   void whenCreatePost_thenPostIsCreated() throws Exception {
     // given
@@ -57,6 +62,13 @@ class PostControllerTest {
             "description": "Test description"
         }
         """;
+
+    // Mock user
+    OAuth2User oauth2User = mock(OAuth2User.class);
+    when(oauth2User.getAttribute("login")).thenReturn("username");
+    OAuth2AuthenticationToken auth = new OAuth2AuthenticationToken(oauth2User,
+        Collections.emptyList(), "client");
+    SecurityContextHolder.getContext().setAuthentication(auth);
 
     // when
     mockMvc.perform(post("/posts")
