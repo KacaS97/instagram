@@ -5,8 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.Data;
 
 @Entity
@@ -21,5 +23,8 @@ public class Post {
   private String userName;
   @OneToOne(cascade = CascadeType.ALL)
   private Image image;
+
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Comment> comments;
 
 }
